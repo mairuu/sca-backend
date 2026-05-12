@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mairuu/mp-api/internal/features/user/service"
+	"github.com/mairuu/mp-api/internal/platform/metrics"
 	httptransport "github.com/mairuu/mp-api/internal/platform/transport/http"
 	"github.com/mairuu/mp-api/internal/platform/transport/http/middleware"
 )
@@ -39,6 +40,8 @@ func (h *UserHandler) Register(ctx *gin.Context) {
 		return
 	}
 
+	metrics.RegistrationsTotal.Inc()
+
 	httptransport.SuccessResponse(ctx, http.StatusCreated, user)
 }
 
@@ -52,6 +55,8 @@ func (h *UserHandler) Login(ctx *gin.Context) {
 	if h.fail(ctx, err) {
 		return
 	}
+
+	metrics.LoginsTotal.Inc()
 
 	httptransport.SuccessResponse(ctx, http.StatusOK, response)
 }

@@ -33,6 +33,7 @@ import (
 	httptransport "github.com/mairuu/mp-api/internal/platform/transport/http"
 	"github.com/mairuu/mp-api/internal/platform/transport/http/handler"
 	"github.com/mairuu/mp-api/internal/platform/transport/http/middleware"
+	ginprometheus "github.com/zsais/go-gin-prometheus"
 )
 
 func main() {
@@ -103,6 +104,10 @@ func main() {
 
 	r.Use(gin.Recovery())
 	r.Use(middleware.CORS("*")) // todo: make configurable
+
+	p := ginprometheus.NewPrometheus("gin")
+	p.Use(r)
+
 	r.Use(middleware.TraceID())
 	r.Use(middleware.Logger(log))
 	r.Use(middleware.Auth(tokenService))

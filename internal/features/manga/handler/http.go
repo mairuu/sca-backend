@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mairuu/mp-api/internal/features/manga/service"
+	"github.com/mairuu/mp-api/internal/platform/metrics"
 	httptransport "github.com/mairuu/mp-api/internal/platform/transport/http"
 )
 
@@ -53,6 +54,8 @@ func (h *Handler) CreateManga(ctx *gin.Context) {
 	if h.fail(ctx, err) {
 		return
 	}
+
+	metrics.MangasUploadedTotal.Inc()
 
 	httptransport.SuccessResponse(ctx, http.StatusCreated, m)
 }
